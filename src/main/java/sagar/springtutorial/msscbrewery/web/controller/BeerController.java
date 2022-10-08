@@ -1,5 +1,6 @@
 package sagar.springtutorial.msscbrewery.web.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +12,7 @@ import java.util.UUID;
 
 @RequestMapping("/api/v1/beer")
 @RestController
+@Slf4j
 public class BeerController {
     BeerService beerService;
 
@@ -24,10 +26,22 @@ public class BeerController {
     }
 
     @PostMapping
-    public ResponseEntity createBeer(BeerDto beerDto) {
+    public ResponseEntity createBeer(@RequestBody  BeerDto beerDto) {
         BeerDto savedDto = this.beerService.saveBeer(beerDto);
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add("Location", "/api/v1/beer/"+savedDto.getId());
-        return new ResponseEntity(httpHeaders, HttpStatus.CREATED);
+        return new ResponseEntity(savedDto, HttpStatus.CREATED);
+    }
+
+
+    @PutMapping({"/{beerId}"})
+    public ResponseEntity updateBeer(@RequestBody BeerDto beerDto, @PathVariable("beerId") UUID beerId) {
+        BeerDto beerDto1 = this.beerService.updateBeer(beerId, beerDto);
+        log.debug(beerDto1.toString());
+        return new ResponseEntity(beerDto1, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{beerId}")
+    public ResponseEntity deleteBeer(@PathVariable UUID beerId) {
+        this.beerService.deleteBeer(beerId);
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 }

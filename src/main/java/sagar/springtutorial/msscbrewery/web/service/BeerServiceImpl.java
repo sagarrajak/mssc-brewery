@@ -15,4 +15,15 @@ public class BeerServiceImpl implements BeerService {
     public BeerDto saveBeer(BeerDto beerDto) {
         return new BeerDto(beerDto);
     }
+
+    @Override
+    public BeerDto updateBeer(UUID id, BeerDto beerDto) {
+        BeerDto beerDtor = new BeerDto(beerDto);
+        beerDtor.setId(id);
+        return beerDtor;
+    }
+
+    @Override
+    public void deleteBeer(UUID id) {
+    }
 }
